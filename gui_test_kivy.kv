@@ -1,0 +1,427 @@
+<MyButt@Button>:
+        # size_hint_x: 0.7
+        # size_hint_y: 0.5
+        size_hint: 1, 0.5 
+        # background_color: 0, 1, 1, .3 # (r, g, b, a)
+        background_color: 1, 1, 1, 1 # (r, g, b, a)
+        # border: 18, 18, 18, 18        # (bottom, right, top, left)
+        on_press: print("on_press: {} Button pressed !!".format(self.text));
+        on_state: print("on_state: {0} Button state is {1}".format(self.text, self.state))
+
+<ModelDropDown@Button>:
+        # size_hint_x: 0.7
+        # size_hint_y: 0.5
+        size_hint_y: None 
+        height: '48dp'
+        # background_color: 0, 1, 1, .3 # (r, g, b, a)
+        background_color: 1, 1, 1, 0.5 # (r, g, b, a)
+        on_release: print("on_release: text:{}".format(self.text)); app.trtInferrenceWidget.ids["dropdown"].select(self.text); app.trtInferrenceWidget.mode_btn_ctrl(self.text)
+        # border: 16, 16, 16, 16        # (bottom, right, top, left)
+        # on_press: print("on_press: {} Button pressed !!".format(self.text));
+        # on_release: parent.dropdown.select(self.text.split(" ")[1])
+
+<ModelToggle@ToggleButton>
+        group: "sel_model"
+        # on_release: print(self.value); root.infer_model.change_model(self.value)
+        on_release: print(self.value); app.trtInferrenceWidget.ids["select_btn"].text = self.text
+
+<OutputToggle@ToggleButton>
+        group: "out_mode"
+        # on_press: print("on_press: {0} Button pressed !!".format(self.text)); app.infer_model.change_output_style(self.value)
+        on_press: print("on_press: {0} Button pressed !!".format(self.text))
+
+<EffectButton@ToggleButton>
+        group: "eff_level"
+        # on_press: print("on_press: {0} Button pressed !!".format(self.text)); app.infer_model.change_thresh(float(self.text))
+        on_press: print("on_press: {0} Button pressed !!".format(self.text))
+
+<ColorButton@ToggleButton>
+        group: "color_1"
+        background_normal: ""
+        background_down: "gray.png"
+        # on_press: print("on_press: {0} Button pressed !!".format(self.text)); print("color: {}".format(app.rgba_color1(self.value)[0:3]))
+        on_press: print("on_press: {0} Button pressed !!".format(self.text)); print("color: {}".format(app.trtInferrenceWidget.rgba_color(self.value)[0:3]))
+
+
+<trtInferrenceWidget>:
+        # trick to not lost the Dropdown instance
+        # Dropdown itself is not really made to be used in kv.
+        __safe_id: [dropdown.__self__]
+
+        # BoxLayout:
+        #         orientation: 'vertical'
+        #         # orientation: 'horizontal'
+        #         padding: 0
+        #         spacing: 1
+        #         size_hint: 1, 1
+        # size: 1920, 1080
+        Image:
+                pos: root.WIND_BASE_X, root.WIND_BASE_Y
+                size: 1920, 1080
+                id: video_image
+        # AnchorLayout:
+        #         size: 1920, 1080
+        #         size_hint: 1.0, 1.0
+        #         pos: 0, 0
+        #         anchor_x: "center"
+        #         anchor_y: "top"
+        #         Label:
+        #                 id: title
+        #                 markup: True
+        #                 text: "[size=18][color=000000][b]Hello[/b][/color][/size] [i]world[/i] from [size=32]kv[/size] [u]file[/u] [color=00ff00]for[/color] [size=24][color=0000ff]demonstoration[/color][/size]."
+        #                 color: 1, 0, 0, 0.3
+        #                 size_hint: None, 0.15
+        #                 anchor_x: "center"
+        #                 anchor_y: "top"
+        #                 pos: 300, 530
+        #         MyButt:
+        #                 text: 'Quit'
+        #                 anchor_x: "left"
+        #                 anchor_y: "bottom"
+        #                 pos: 100, 0
+        #                 on_release: print("on_release: {} Button released !!".format(self.text)); root.on_stop()
+        #         MyButt:
+        #                 text: 'Exit'
+        #                 anchor_x: "right"
+        #                 anchor_y: "bottom"
+        #                 pos: 650, 0
+        #                 on_release: print("on_release: {} Button released !!".format(self.text)); root.on_stop()
+        FloatLayout:
+                orientation: 'vertical'
+                # orientation: 'horizontal'
+                # padding: 0
+                # spacing: 1
+                # size_hint: 1, 1
+                pos: root.WIND_BASE_X, root.WIND_BASE_Y
+                # GridLayout:
+                #         pos: 1800, 0
+                #         rows: 3
+                #         cols: 1
+                #         size_hint: 1, 1
+                # ToggleButton:
+                #         group: "g1"
+                #         id: on_btn
+                #         text: "ON"
+                #         pos: 500, 300
+                #         size_hint: None, None
+                #         height: 200
+                #         width: 200
+                #         state: "down"
+                #         active: True
+                #         disabled: True
+                #         on_press: print("on_press: {} Button pressed !!".format(self.text)); off_btn.disabled = False; self.disabled = True
+                #         # on_state: print("on_state: {0} Button state is {1}".format(self.text, self.state)); self.active = False if self.state == "down" else self.active = True
+                #         on_state: print("on_state: {0} Button state is {1} active is {2} disabled is {3}".format(self.text, self.state, self.active, self.disabled))
+                #         on_release: print("on_release: {} Button released !!".format(self.text)); self.active = True
+                # ToggleButton:
+                #         group: "g1"
+                #         id: off_btn
+                #         text: "OFF"
+                #         pos: 700, 300
+                #         size_hint: None, None
+                #         height: 200
+                #         width: 200
+                #         state: "normal"
+                #         active: True
+                #         disabled: False
+                #         on_press: print("on_press: {} Button pressed !!".format(self.text)); on_btn.disabled = False; self.disabled = True
+                #         # on_state: print("on_state: {0} Button state is {1}".format(self.text, self.state))
+                #         on_state: print("on_state: {0} Button state is {1} active is {2} disabled is {3}".format(self.text, self.state, self.active, self.disabled))
+                #         on_release: print("on_release: {} Button released !!".format(self.text)); self.active = True
+                BoxLayout:
+                        orientation: 'vertical'
+                        id: config
+                        size_hint: 1.0, 1.0
+                        rows: 2
+                        cols: 1
+                        pos: root.CONFIG_PANEL_CLOSE_X, root.CONFIG_PANEL_Y
+                        size_hint: None, None
+                        height: 100
+                        width: 100
+                        padding: 2
+                        spacing: 3
+                        GridLayout:
+                                id: select_btn2
+                                rows: 8
+                                cols: 1
+                                size_hint: None, None
+                                height: 150
+                                width: 100
+                                Label:
+                                        font_size:18
+                                        markup: True
+                                        # text: "[i]Inferrence\nModel[/i]"
+                                        text: "[i]Model[/i]"
+                                        # text_size: None, root.height
+                                        canvas.before:
+                                                Color:
+                                                        rgba: 0.5, 0.5, 0.5, 1
+                                                Rectangle:
+                                                        # pos: self.pos
+                                                        pos: (self.pos[0]+1, self.pos[1]+2)
+                                                        # size: self.size
+                                                        size: (self.size[0]-2, self.size[1])
+                                ModelToggle:
+                                        text: "Unet"
+                                        value: "self.unet_trt_model"
+                                ModelToggle:
+                                        text: "Laddernet"
+                                        value: "self.laddernet_trt_model"
+                                ModelToggle:
+                                        text: "Deeplab"
+                                        value: "self.deeplab_trt_model"
+                                ModelToggle:
+                                        text: "Deeplab Org"
+                                        value: "self.deeplab_origi_trt_model"
+                                        state: "down"
+                                ModelToggle:
+                                        text: 'Nerves'
+                                        value: "self.deeplab_origi_trt_model"
+                                ModelToggle:
+                                        text: 'Pancreas'
+                                        value: "self.deeplab_origi_trt_model"
+                                ModelToggle:
+                                        text: 'Ureter'
+                                        value: "self.deeplab_origi_trt_model"
+
+                        GridLayout:
+                                id: output
+                                rows: 3
+                                cols: 1
+                                size_hint: None, None
+                                height: 100
+                                width: 100
+                                Label:
+                                        font_size:18
+                                        markup: True
+                                        text: "[i]Output[/i]"
+                                        canvas.before:
+                                                Color:
+                                                        rgba: 0.5, 0.5, 0.5, 1
+                                                Rectangle:
+                                                        # pos: self.pos
+                                                        pos: (self.pos[0]+1, self.pos[1]+2)
+                                                        # size: self.size
+                                                        size: (self.size[0]-2, self.size[1]-6)
+                                OutputToggle:
+                                        text: "Softmap"
+                                        value: "softmap_torch"
+                                        state: "down"
+                                OutputToggle:
+                                        text: "Overlay"
+                                        value: "overlay_torch"
+                        GridLayout:
+                                id: effect
+                                rows: 5
+                                cols: 1
+                                size_hint: None, None
+                                height: 100
+                                width: 100
+                                Label:
+                                        font_size:18
+                                        markup: True
+                                        text: "[i]Effect Level[/i]"
+                                        canvas.before:
+                                                Color:
+                                                        rgba: 0.5, 0.5, 0.5, 1
+                                                Rectangle:
+                                                        # pos: self.pos
+                                                        pos: (self.pos[0]+1, self.pos[1]+2)
+                                                        # size: self.size
+                                                        size: (self.size[0]-2, self.size[1])
+                                EffectButton:
+                                        text: "0.1"
+                                        state: "down"
+                                EffectButton:
+                                        text: "0.3"
+                                EffectButton:
+                                        text: "0.5"
+                                EffectButton:
+                                        text: "0.9"
+                        GridLayout:
+                                id: color
+                                # orientation: "vertical"
+                                # size_hint: 1.0, 0.5
+                                # size_hint: 0.7, 0.7
+                                rows: 4
+                                cols: 4
+                                size_hint: None, None
+                                height: 100
+                                width: 100
+                                ColorButton:
+                                        value: "0, 255, 255, 255"
+                                        background_color: root.color_ratio(self.value)
+                                        state: "down"
+                                ColorButton:
+                                        value: "110, 255, 255, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "160, 255, 255, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "190, 190, 190, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "255, 120, 255, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "255, 140, 255, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "255, 180, 255, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "210, 210, 210, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "100, 255, 100, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "130, 255, 130, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "170, 255, 170, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "230, 230, 230, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "255, 255, 100, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "255, 255, 150, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "255, 255, 200, 255"
+                                        background_color: root.color_ratio(self.value)
+                                ColorButton:
+                                        value: "250, 250, 250, 255"
+                                        background_color: root.color_ratio(self.value)
+                Label:
+                        id: time_stamp
+                        markup: True
+                        text_size: self.size
+                        halign: "left"
+                        text: "FPS: 60.0"
+                        pos: root.FPS_LABEL_X, root.FPS_LABEL_Y
+                        # on_fps_str: print("on_fps_str fps_str:{}!!",format(value)); self.text = root.fps_str
+                GridLayout:
+                        # id: on_off
+                        # orientation: "vertical"
+                        # size_hint: 1.0, 0.5
+                        size_hint: None, None
+                        # size_hint: 0.7, 0.7
+                        rows: 2
+                        cols: 1
+                        pos: root.CTRL_BUTTONS_X, root.ON_OFF_BUTTON_Y
+                        height: 100
+                        width: 100
+                        ToggleButton:
+                                group: "on_off"
+                                id: on_off_btn
+                                state: "down"
+                                markup: True
+                                text: "[i][b]Inference On[b][/i]" if self.state == "down" else "[i][b]Inference Off[/b][/i]"
+                                size_hint: 1.0, 0.5
+                                # size_hint: None, None
+                                # height: 200
+                                # width: 200
+                                on_press: print("on_press: {} Button pressed !!".format(self.text))
+                                on_state: print("on_state: {0} Button state is {1}".format(self.text, self.state))
+                                on_release: print("on_release: {} Button released !!".format(self.text)); root.on_off_btn_ctrl(self.state)
+                        ToggleButton:
+                                group: "on_off"
+                                id: timer_off_btn
+                                disabled: False
+                                markup: True
+                                font_size: "12"
+                                halign: "center"
+                                text: "             [i][b]Inference\n            Off[b][/i]"
+                                size_hint: 1.0, 0.5
+                                # size_hint: None, None
+                                # width: 100
+                                # height: 100
+                                # size_hint_y: None
+                                # height: "48dp"
+                                value: 5
+                                on_press: print("on_press: {} Button pressed !!".format(self.text))
+                                on_state: print("on_state: {0} Button state is {1}".format(self.text, self.state))
+                                on_release: print("on_release: {} Button released !!".format(self.text)); root.set_on_timer(self.value, self.state)
+                                Image:
+                                        source: "timer.png"
+                                        center_x: self.parent.pos[0]+(self.texture_size[0]/2)+4 # (png image x size/2)+space
+                                        center_y: self.parent.center_y
+                                        size_hint: None, None
+                                        width: self.texture_size[0]
+                                        height: self.texture_size[1]
+                ToggleButton:
+                        id: anaut
+                        size_hint_x: None
+                        size_hint_y: None
+                        pos: root.ANAUT_BUTTON_X, root.ANAUT_BUTTON_Y
+                        # text: "Anaut"
+                        # background_color: 0, 1, 1, 0.1 # (r, g, b, a)
+                        background_color: 1, 1, 1, 1 # (r, g, b, a)
+                        # border: 16, 16, 16, 16        # (bottom, right, top, left)
+                        on_press: print("on_press: {} Button pressed !!".format(self.text)); root.slider(self.state)
+                        on_state: print("on_state: {0} Button state is {1}".format(self.text, self.state))
+                        on_release: print("on_release: {} Button released !!".format(self.text))
+                        Image:
+                                source: "anaut.png"
+                                center_x: self.parent.center_x
+                                center_y: self.parent.center_y
+                MyButt:
+                        markup: True
+                        text: '[i][b]Quit[/b][/i]'
+                        anchor_x: "right"
+                        anchor_y: "bottom"
+                        pos: root.QUIT_BUTTON_X, root.QUIT_BUTTON_Y
+                        on_release: print("on_release: {} Button released !!".format(self.text)); root.on_stop()
+                Button:
+                        id: select_btn
+                        text: 'Deeplab Org'
+                        on_release: dropdown.open(self)
+                        pos: root.MODEL_DROPDWN_X, root.MODEL_DROPDWN_Y
+                        background_color: 1, 1, 1, 1 # (r, g, b, a)
+                        size_hint_y: None
+                        height: '48dp'
+                Widget:
+                        on_parent: dropdown.dismiss()
+                DropDown:
+                        id: dropdown
+                        # on_select: print('Selected value: {}'.format(args[1])); select_btn.text = 'Type {}'.format(args[1])
+                        on_select: print('Selected value: {}'.format(args[1])); select_btn.text = args[1]
+                        ModelDropDown:
+                                text: 'Unet'
+                                value: "self.unet_trt_model"
+                        ModelDropDown:
+                                text: "Laddernet"
+                                value: "self.laddernet_trt_model"
+                        ModelDropDown:
+                                text: "Deeplab"
+                                value: "self.deeplab_trt_model"
+                        ModelDropDown:
+                                text: "Deeplab Org"
+                                value: "self.deeplab_origi_trt_model"
+                        ModelDropDown:
+                                text: 'Nerves'
+                        ModelDropDown:
+                                text: 'Pancreas'
+                        ModelDropDown:
+                                text: 'Ureter'
+                
+                # RelativeLayout:
+                #         size_hint: 1, 1
+                #         pos: 1820, 500
+                #         id: rl
+                #         Splitter:
+                #                 sizable_from: 'right'
+                #                 min_size: 0
+                #                 max_size: 100
+                #                 BoxLayout:
+                #                         orientation: 'vertical'
+                #                         Button:
+                #                                 text: 'Panel1'
+                #                         Button:
+                #                                 text: 'Panel2'                
+               
